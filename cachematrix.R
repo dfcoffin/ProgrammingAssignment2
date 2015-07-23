@@ -22,16 +22,111 @@
 ##                       the inverse from cache.               ##
 ##                                                             ##
 #################################################################
-
-## Write a short comment describing this function
+#################################################################
+##                                                             ##
+##     makeCacheMatrix:                                        ##
+##                                                             ##
+##     The following function creates an inverse matrix        ##
+##                                                             ##
+##     variables                                               ##
+##     =========                                               ##
+##         m     - Contains cached inverse matrix              ##
+##                                                             ##
+#################################################################
 
 makeCacheMatrix <- function(x = matrix()) {
+    
+    m <- NULL                  ##   Initialize cached inverse
+                               ##   matrix
 
+    
+    #############################################################
+    ##                                                         ##
+    ##   Set function - Saves original matrix                  ##
+    ##                                                         ##
+    ##   variables:                                            ##
+    ##   ==========                                            ##
+    ##       y      - Contains matrix to be inversed           ##
+    ##       m      - Contains cached inversed matrix          ##
+    ##                                                         ##
+    #############################################################
+    
+    set <- function(y) { 
+        
+        x <<- y                ##   Save original matrix
+        m <<- NULL             ##   Clear cached inverse matrix
+    }
+    
+    #############################################################
+    ##                                                         ##
+    ##   Get function - Returns original matrix                ##
+    ##                                                         ##
+    ##   variables:                                            ##
+    ##   ==========                                            ##
+    ##       x      - Contains matrix to be inversed           ##
+    ##                                                         ##
+    #############################################################
+    
+    get <- function() x 
+    
+    #############################################################
+    ##                                                         ##
+    ##   setinverse function - Saves inversed matrix in        ##
+    ##                         cached variable                 ##
+    ##                                                         ##
+    ##   variables:                                            ##
+    ##   ==========                                            ##
+    ##    inverse   - Contains inverse matrix to be saved      ##
+    ##       x      - Cached inverse matrix                    ##
+    ##                                                         ##
+    #############################################################
+    
+    setinverse <- function(inverse) m <<- inverse
+    
+    #############################################################
+    ##                                                         ##
+    ##   getinverse function - Returns inverse matrix          ##
+    ##                                                         ##
+    ##   variables:                                            ##
+    ##   ==========                                            ##
+    ##       m      - Cached inverse matrix                    ##
+    ##                                                         ##
+    #############################################################
+    
+    getinverse <- function() m 
+    
+    list(set = set,            ##   Create list of functions
+         get = get,
+         setinverse = setinverse,
+         getinverse = getinverse)
+    
 }
 
 
-## Write a short comment describing this function
+#################################################################
+##                                                             ##
+##     cacheSolve:                                             ##
+##                                                             ##
+##     The following function returns a matrix that is         ##
+##     the inverse of 'x'                                      ##
+##                                                             ##
+##                                                             ##
+#################################################################
+
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+
+    m <- x$getinverse()  ## Retrieve cached inverse matrix
+    
+    if(!is.null(m)) {    ## Has inverse matrix been calculated?
+        message("getting cached data")
+        return(m)        ##   Yes, return cached value
+    }
+    
+    
+    data <- x$get()      ##   No, calculate inverse matrix
+    m <- solve(data)
+    x$setinverse(m)      ## Save calculated inverse matrix in cache
+    m
+    
 }
